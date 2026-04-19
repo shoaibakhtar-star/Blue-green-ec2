@@ -1,0 +1,35 @@
+
+services:
+
+  blue:
+    build: .
+    container_name: blue-app
+    ports:
+      - "8001:8000"
+    networks:
+      - app-network
+
+  green:
+    build: .
+    container_name: green-app
+    ports:
+      - "8002:8000"
+    networks:
+      - app-network
+
+  nginx:
+    image: nginx:latest
+    container_name: nginx
+    ports:
+      - "8000:80"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf
+    depends_on:
+      - blue
+      - green
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
